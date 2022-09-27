@@ -5,10 +5,10 @@ import Alert from "react-bootstrap/Alert";
 import { sendUserData } from "../api/login";
 import { useState } from "react";
 
-const Register = () => {
+const Login = ({ sendToken }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [response, setResponse] = useState("");
+  const [token, setToken] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -16,10 +16,11 @@ const Register = () => {
       username: username,
       password: password,
     };
-    sendUserData(user).then((res) => {
-      setResponse(res.text);
-      setUsername("");
-      setPassword("");
+    sendUserData(user, "login").then((res) => {
+      setToken(res.token);
+      if (!["", "not_found", "error", "bad_password"].includes(res.token)) {
+        sendToken(res.token);
+      }
     });
   };
 
@@ -50,17 +51,19 @@ const Register = () => {
       <Button variant="primary" type="submit" onClick={handleSubmit}>
         Submit
       </Button>
-      {response === "" ? (
-        <Alert variant="info">Please fill in the registration form!</Alert>
-      ) : response === "success" ? (
-        <Alert variant="success">Success! Please log in!</Alert>
-      ) : response === "user_exist" ? (
-        <Alert variant="warning">User already exists!</Alert>
-      ) : (
+      {token === "" ? (
+        <Alert variant="info">Please log in!</Alert>
+      ) : token === "not_found" ? (
+        <Alert variant="warning">User not found!</Alert>
+      ) : token === "error" ? (
         <Alert variant="danger">Error occured!</Alert>
+      ) : token === "bad_password" ? (
+        <Alert variant="warning">Bad password!</Alert>
+      ) : (
+        <Alert variant="success">Logged in</Alert>
       )}
     </Form>
   );
 };
 
-export default Register;
+export default Login;

@@ -1,10 +1,10 @@
-import NavBar from "./NavBar";
+import NavBarComponent from "./NavBar";
 
-const Layout = ({ children }) => {
+const Layout = (props) => {
   return (
     <>
-      <NavBar />
-      <div className="main">{children}</div>
+      <NavBarComponent username={props.username}/>
+      <div className="main">{props.children}</div>
     </>
   );
 };

@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import {} from "dotenv/config";
 import Planets from "./planets.model.js";
 import People from "./people.model.js";
 import Users from "./users.model.js";
@@ -14,7 +15,7 @@ const SWAPI_PLANETS_URL = "https://swapi.dev/api/planets/";
 const SWAPI_PEOPLE_URL = "https://swapi.dev/api/people/";
 const planetsPerPages = 10;
 
-const JWT_SECRET = "prince_of_the_highlands_never_think_of_anyone_else";
+const JWT_SECRET = process.env.JWT_SECRET;
 const saltRounds = 10;
 
 mongoose.connect("mongodb://localhost/api_wars_data");
@@ -37,29 +38,8 @@ const storePeople = async (url = SWAPI_PEOPLE_URL) => {
   } else return;
 };
 
-storePlanets();
-storePeople();
-
-const checkPassword = async (pw, hash) => {
-  bcrypt.compare(pw, hash, (err, result) => {
-    if (err) {
-      throw err;
-    }
-    return result;
-  });
-};
-
-const makeToken = async (id) => {
-  const token = jwt.sign({ id: id }, JWT_SECRET);
-  return token;
-};
-
-const verifyToken = async (token) => {
-  jwt.verify(token, JWT_SECRET, async (err, decoded) => {
-    if (err) throw err;
-    return decoded;
-  });
-};
+//storePlanets();
+//storePeople();
 
 app.use(cors());
 app.use(express.json());
@@ -94,18 +74,71 @@ app.post("/api/people", async (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  const user = await Users.find({ username: req.body.username });
-  if (user.length > 0) {
-    res.sendStatus(400);
+  const user = await Users.findOne({ username: req.body.username });
+  if (user) {
+    res.status(302).json({ text: "user_exist" });
   } else {
     bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
       if (err) {
-        res.sendStatus(500);
+        res.status(500).end("error");
+        return;
       }
       await Users.create({ username: req.body.username, password: hash });
-      res.sendStatus(200);
+      res.status(200).json({ text: "success" });
     });
   }
+});
+
+app.post("/login", async (req, res) => {
+  const user = await Users.findOne({ username: req.body.username });
+  if (!user) {
+    res.status(400).json({ token: "not_found" });
+  } else {
+    bcrypt.compare(req.body.password, user.password, (err, result) => {
+      if (err) {
+        res.status(500).json({ token: "error" });
+      } else {
+        if (!result) {
+          res.status(401).json({ token: "bad_password" });
+        } else {
+          const token = jwt.sign({ id: user._id }, JWT_SECRET);
+          res.status(200).json({ token: token });
+        }
+      }
+    });
+  }
+});
+
+app.get("/verify", (req, res) => {
+  const header = req.headers["authorization"];
+  if (header) {
+    const bearer = header.split(" ");
+    const token = bearer[1];
+    jwt.verify(token, JWT_SECRET, async (err, decoded) => {
+      if (err) {
+        res.status(400).json({ message: "token_not_valid" });
+      } else {
+        res.status(200).json({ message: "valid_token", data: decoded });
+      }
+    });
+  } else {
+    res.status(403).json({ message: "no_token" });
+  }
+});
+
+app.get("/users/:id", async (req, res) => {
+  let user = null;
+  try {
+    user = await Users.findById(req.params.id);
+  } catch {
+    return res.status(400).json({ message: "error" });
+  }
+
+  if (!user) {
+    return res.status(404).end({ message: "not_found" });
+  }
+
+  res.status(200).json({ message: "found", username: user.username });
 });
 
 app.listen(port, () => console.log(`http://localhost:${port}`));

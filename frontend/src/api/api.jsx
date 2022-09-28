@@ -1,4 +1,4 @@
-const getPlanetsData = async (page) => {
+const getPlanetsData = async (page = "") => {
   const planets = await fetch("http://localhost:8080/api/planets/" + page);
   return await planets.json();
 };
@@ -19,4 +19,18 @@ const getResidents = async (residents) => {
   return await data.json();
 };
 
-export { getPlanetsData, getPageCount, getResidents };
+const storeVoteToPlanet = async (planetId, username) => {
+  const response = await fetch(
+    `http://localhost:8080/api/planets/${planetId}`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ username: username }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return await response.json();
+};
+
+export { getPlanetsData, getPageCount, getResidents, storeVoteToPlanet };

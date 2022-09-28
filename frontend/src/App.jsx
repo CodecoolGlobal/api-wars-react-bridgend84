@@ -4,6 +4,7 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Logout from "./components/Logout";
 import { verifyToken, getUserName } from "./api/login";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -13,6 +14,11 @@ const App = () => {
 
   const sendToken = (received) => {
     setToken(received);
+  };
+
+  const handleLogout = () => {
+    setToken(null);
+    setUser("Not signed in");
   };
 
   useEffect(() => {
@@ -31,9 +37,13 @@ const App = () => {
     <BrowserRouter>
       <Layout username={user}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home username={user} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login sendToken={sendToken} />} />
+          <Route
+            path="/logout"
+            element={<Logout handleLogout={handleLogout} />}
+          />
         </Routes>
       </Layout>
     </BrowserRouter>

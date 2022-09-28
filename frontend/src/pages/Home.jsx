@@ -3,9 +3,14 @@ import ResidentsModal from "../components/ResidentsModal";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
-import { getPlanetsData, getPageCount, getResidents } from "../api/api";
+import {
+  getPlanetsData,
+  getPageCount,
+  getResidents,
+  storeVoteToPlanet,
+} from "../api/api";
 
-function Home() {
+function Home({ username }) {
   const [planets, setPlanets] = useState([]);
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
@@ -20,7 +25,7 @@ function Home() {
     getPlanetsData(page).then((data) => {
       setPlanets(data);
     });
-  }, [page]);
+  }, [page, planets]);
 
   const modalOpen = async (residents) => {
     getResidents(residents).then((response) => setResidents(response));
@@ -29,6 +34,12 @@ function Home() {
 
   const modalClose = () => {
     setShowModal(false);
+  };
+
+  const voteToPlanet = async (planetId, button) => {
+    button.disabled = true;
+    await storeVoteToPlanet(planetId, username);
+    setPlanets([]);
   };
 
   return (
@@ -99,7 +110,19 @@ function Home() {
                   "No known residents"
                 )}
               </td>
-              <td></td>
+              <td>
+                {username === "Not signed in" ? (
+                  <></>
+                ) : (
+                  <Button
+                    variant="outline-primary"
+                    onClick={(e) => voteToPlanet(planet._id, e.target)}
+                    disabled={planet.voted.includes(username)}
+                  >
+                    Vote
+                  </Button>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>

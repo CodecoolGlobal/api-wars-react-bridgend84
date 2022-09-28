@@ -22,10 +22,13 @@ mongoose.connect("mongodb://localhost/api_wars_data");
 
 const storePlanets = async (url = SWAPI_PLANETS_URL) => {
   const response = await axios.get(url);
-  const data = await response.data;
-  await Planets.insertMany(data.results);
-  if (data.next) {
-    storePlanets(data.next);
+  const fetchedData = await response.data;
+  const data = fetchedData.results.map(
+    (planet) => new Object({ ...planet, votes: 0, voted: [] })
+  );
+  await Planets.insertMany(data);
+  if (fetchedData.next) {
+    storePlanets(fetchedData.next);
   } else return;
 };
 
@@ -38,12 +41,17 @@ const storePeople = async (url = SWAPI_PEOPLE_URL) => {
   } else return;
 };
 
-//storePlanets();
-//storePeople();
+storePlanets();
+storePeople();
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.get("/api/planets", async (req, res) => {
+  const planets = await Planets.find();
+  res.json(planets);
+});
 
 app.get("/api/planets/pages", async (req, res) => {
   const count = await Planets.countDocuments();
@@ -65,6 +73,19 @@ app.get("/api/planets/:page", async (req, res) => {
       .skip((pageNumber - 1) * planetsPerPages);
     res.json(planets);
   }
+});
+
+app.patch("/api/planets/:id", async (req, res) => {
+  const planet = await Planets.findById(req.params.id);
+  if (!planet) {
+    res.status(404).json({ message: "not_found " });
+  }
+  const updatedVoted = [...planet.voted, req.body.username];
+  const updatedVotes = planet.votes + 1;
+  const updated = await planet
+    .set({ votes: updatedVotes, voted: updatedVoted })
+    .save();
+  res.status(200).json(updated);
 });
 
 app.post("/api/people", async (req, res) => {

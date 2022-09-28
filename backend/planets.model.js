@@ -14,7 +14,9 @@ const planetsSchema = new mongoose.Schema({
       films: Array,
       created: Date,
       edited: Date,
-      url: String
+      url: String,
+      votes: Number,
+      voted: Array
 });
 
 export default mongoose.model("planets", planetsSchema);

@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import {} from "dotenv/config";
 import Planets from "./planets.model.js";
 import People from "./people.model.js";
 import Users from "./users.model.js";

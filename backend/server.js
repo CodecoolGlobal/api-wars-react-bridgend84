@@ -4,7 +4,6 @@ import cors from "cors";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import {} from "dotenv/config";
 import Planets from "./planets.model.js";
 import People from "./people.model.js";
 import Users from "./users.model.js";
@@ -18,7 +17,12 @@ const planetsPerPages = 10;
 const JWT_SECRET = process.env.JWT_SECRET;
 const saltRounds = 10;
 
-mongoose.connect("mongodb://localhost/api_wars_data");
+mongoose.connect("mongodb://localhost/api_wars_data").then(async () => {
+  const countPlanets = await mongoose.connection.db.collection('planets').countDocuments();
+  const countPeople = await mongoose.connection.db.collection('people').countDocuments();
+  if (countPlanets === 0) await storePlanets();
+  if (countPeople === 0) await storePeople();
+})
 
 const storePlanets = async (url = SWAPI_PLANETS_URL) => {
   const response = await axios.get(url);
@@ -28,8 +32,8 @@ const storePlanets = async (url = SWAPI_PLANETS_URL) => {
   );
   await Planets.insertMany(data);
   if (fetchedData.next) {
-    storePlanets(fetchedData.next);
-  } else return;
+    await storePlanets(fetchedData.next);
+  }
 };
 
 const storePeople = async (url = SWAPI_PEOPLE_URL) => {
@@ -37,12 +41,9 @@ const storePeople = async (url = SWAPI_PEOPLE_URL) => {
   const data = await response.data;
   await People.insertMany(data.results);
   if (data.next) {
-    storePeople(data.next);
-  } else return;
+    await storePeople(data.next);
+  }
 };
-
-storePlanets();
-storePeople();
 
 app.use(cors());
 app.use(express.json());

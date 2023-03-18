@@ -1,0 +1,40 @@
+version: '1.0'
+
+services:
+
+  frontend:
+    build:
+      context: frontend
+    volumes:
+      - /app/node_modules
+    depends_on:
+      - backend
+    ports:
+      - 3000:3000
+    networks:
+      - react-express
+
+  backend:
+    build:
+      context: backend
+    volumes:
+      - /app/node_modules
+    depends_on:
+      - mongo
+    env_file: ./backend/.env
+    networks:
+      - express-mongo
+      - react-express
+
+  mongo:
+    image: mongo
+    volumes:
+      - ./data:/data/api_wars_data
+    networks:
+      - express-mongo
+    expose:
+      - 27018
+
+networks:
+  react-express:
+  express-mongo:

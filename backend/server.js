@@ -10,15 +10,16 @@ import People from "./people.model.js";
 import Users from "./users.model.js";
 
 const app = express();
-const port = 8080;
-const SWAPI_PLANETS_URL = "https://swapi.dev/api/planets/";
-const SWAPI_PEOPLE_URL = "https://swapi.dev/api/people/";
+const port = parseInt(process.env.LOCALHOST_PORT);
+const SWAPI_PLANETS_URL = process.env.SWAPI_PLANETS_URL;
+const SWAPI_PEOPLE_URL = process.env.SWAPI_PEOPLE_URL;
+const MONGO_DB_URI = process.env.MONGO_DB_URI;
 const planetsPerPages = 10;
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const saltRounds = 10;
 
-mongoose.connect("mongodb://localhost/api_wars_data").then(async () => {
+mongoose.connect(MONGO_DB_URI).then(async () => {
   const countPlanets = await mongoose.connection.db.collection('planets').countDocuments();
   const countPeople = await mongoose.connection.db.collection('people').countDocuments();
   if (countPlanets === 0) await storePlanets();

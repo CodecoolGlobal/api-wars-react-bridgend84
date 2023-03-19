@@ -36,8 +36,13 @@ function Home({ username }) {
     setShowModal(false);
   };
 
-  const voteToPlanet = async (planetId, button) => {
+  const voteToPlanet = async (planetId, index, button) => {
     button.disabled = true;
+    setPlanets([...planets.slice(0, index), {
+      ...planets[index],
+      voted: [...planets[index].voted, username],
+      votes: planets[index].votes + 1
+    }, ...planets.slice(index + 1, planets.length)])
     await storeVoteToPlanet(planetId, username);
   };
 
@@ -115,7 +120,7 @@ function Home({ username }) {
                 ) : (
                   <Button
                     variant="outline-primary"
-                    onClick={(e) => voteToPlanet(planet._id, e.target)}
+                    onClick={(e) => voteToPlanet(planet._id, index, e.target)}
                     disabled={planet.voted.includes(username)}
                   >
                     Vote

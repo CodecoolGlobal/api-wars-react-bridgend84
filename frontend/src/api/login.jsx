@@ -1,5 +1,5 @@
 const sendUserData = async (userData, endPoint = "register") => {
-  const response = await fetch(`http://localhost:8080/${endPoint}`, {
+  const response = await fetch(`/api/${endPoint}`, {
     method: "POST",
     body: JSON.stringify(userData),
     headers: {
@@ -10,7 +10,7 @@ const sendUserData = async (userData, endPoint = "register") => {
 };
 
 const verifyToken = async (token) => {
-  const response = await fetch("http://localhost:8080/verify", {
+  const response = await fetch("/api/verify", {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -20,7 +20,7 @@ const verifyToken = async (token) => {
 };
 
 const getUserName = async (id) => {
-  const response = await fetch(`http://localhost:8080/users/${id}`);
+  const response = await fetch(`/api/users/${id}`);
   return response.json();
 };
 

@@ -1,5 +1,4 @@
 import express from "express";
-import axios from "axios";
 import cors from "cors";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
@@ -11,41 +10,11 @@ import Users from "./users.model.js";
 
 const app = express();
 const port = parseInt(process.env.LOCALHOST_PORT);
-const SWAPI_PLANETS_URL = process.env.SWAPI_PLANETS_URL;
-const SWAPI_PEOPLE_URL = process.env.SWAPI_PEOPLE_URL;
 const MONGO_DB_URI = process.env.MONGO_DB_URI;
 const planetsPerPages = 10;
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const saltRounds = 10;
-
-mongoose.connect(MONGO_DB_URI).then(async () => {
-  const countPlanets = await mongoose.connection.db.collection('planets').countDocuments();
-  const countPeople = await mongoose.connection.db.collection('people').countDocuments();
-  if (countPlanets === 0) await storePlanets();
-  if (countPeople === 0) await storePeople();
-})
-
-const storePlanets = async (url = SWAPI_PLANETS_URL) => {
-  const response = await axios.get(url);
-  const fetchedData = await response.data;
-  const data = fetchedData.results.map(
-    (planet) => new Object({ ...planet, votes: 0, voted: [] })
-  );
-  await Planets.insertMany(data);
-  if (fetchedData.next) {
-    await storePlanets(fetchedData.next);
-  }
-};
-
-const storePeople = async (url = SWAPI_PEOPLE_URL) => {
-  const response = await axios.get(url);
-  const data = await response.data;
-  await People.insertMany(data.results);
-  if (data.next) {
-    await storePeople(data.next);
-  }
-};
 
 app.use(cors());
 app.use(express.json());
@@ -97,7 +66,7 @@ app.post("/api/people", async (req, res) => {
   res.json(residents);
 });
 
-app.post("/register", async (req, res) => {
+app.post("/api/register", async (req, res) => {
   const user = await Users.findOne({ username: req.body.username });
   if (user) {
     res.status(302).json({ text: "user_exist" });
@@ -113,7 +82,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   const user = await Users.findOne({ username: req.body.username });
   if (!user) {
     res.status(400).json({ token: "not_found" });
@@ -133,7 +102,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/verify", (req, res) => {
+app.get("/api/verify", (req, res) => {
   const header = req.headers["authorization"];
   if (header) {
     const bearer = header.split(" ");
@@ -150,7 +119,7 @@ app.get("/verify", (req, res) => {
   }
 });
 
-app.get("/users/:id", async (req, res) => {
+app.get("/api/users/:id", async (req, res) => {
   let user = null;
   try {
     user = await Users.findById(req.params.id);
@@ -165,4 +134,5 @@ app.get("/users/:id", async (req, res) => {
   res.status(200).json({ message: "found", username: user.username });
 });
 
-app.listen(port, () => console.log(`http://localhost:${port}`));
+mongoose.connect(MONGO_DB_URI)
+  .then(() => app.listen(port, () => console.log(`http://localhost:${port}`)));

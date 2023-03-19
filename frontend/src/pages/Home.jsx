@@ -25,7 +25,7 @@ function Home({ username }) {
     getPlanetsData(page).then((data) => {
       setPlanets(data);
     });
-  }, [page, planets]);
+  }, [page]);
 
   const modalOpen = async (residents) => {
     getResidents(residents).then((response) => setResidents(response));
@@ -39,7 +39,6 @@ function Home({ username }) {
   const voteToPlanet = async (planetId, button) => {
     button.disabled = true;
     await storeVoteToPlanet(planetId, username);
-    setPlanets([]);
   };
 
   return (

@@ -1,15 +1,15 @@
 const getPlanetsData = async (page = "") => {
-  const planets = await fetch("http://localhost:8080/api/planets/" + page);
+  const planets = await fetch("/api/planets/" + page);
   return await planets.json();
 };
 
 const getPageCount = async () => {
-  const pages = await fetch("http://localhost:8080/api/planets/pages");
+  const pages = await fetch("/api/planets/pages");
   return await pages.json();
 };
 
 const getResidents = async (residents) => {
-  const data = await fetch("http://localhost:8080/api/people", {
+  const data = await fetch("/api/people", {
     method: "POST",
     body: JSON.stringify(residents),
     headers: {
@@ -21,7 +21,7 @@ const getResidents = async (residents) => {
 
 const storeVoteToPlanet = async (planetId, username) => {
   const response = await fetch(
-    `http://localhost:8080/api/planets/${planetId}`,
+    `/api/planets/${planetId}`,
     {
       method: "PATCH",
       body: JSON.stringify({ username: username }),

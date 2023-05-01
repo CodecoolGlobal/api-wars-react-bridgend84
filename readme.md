@@ -4,14 +4,17 @@
 [![LinkedIn-bridgend84][linkedin-shield-bridgend84]][linkedin-url-bridgend84]
 <h3 align="center">API WARS</h3>
 
-  <p align="center">
-    Web application what shows data about the Star Wars universe (use <a href="https://swapi.dev/">swapi.dev</a>), stores visitor preferences (voting statistics) and handles user login.
-    <br />
+<p align="center">
+  Web application what shows data about the Star Wars universe (use <a href="https://swapi.dev/">swapi.dev</a>), stores visitor preferences (voting statistics) and handles user login.
+  <br />
+
 ### Built With
 
 [![React][React.js]][React-url]
-[![Docker][Docker-badge]][Docker-url]
+[![NodeJS][NodeJS-badge]][NodeJS-url]
+[![ExpressJS][ExpressJS-badge]][ExpressJS-url]
 [![MongoDB][MongoDB-badge]][MongoDB-url]
+[![Docker][Docker-badge]][Docker-url]
 
 ## Getting Started
 
@@ -48,7 +51,11 @@ Download <a href="https://www.docker.com/">Docker</a>.
 [product-screenshot]: images/screenshot.png
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react
 [React-url]: https://reactjs.org/
-[MongoDB-badge]: https://img.shields.io/badge/MongoDB-20232A?style=for-the-badge&logo=mongo
+[MongoDB-badge]: https://img.shields.io/badge/MongoDB-20232A?style=for-the-badge&logo=mongodb
 [MongoDB-url]: https://www.mongodb.com/
+[NodeJS-badge]: https://img.shields.io/badge/NodeJS-20232A?style=for-the-badge&logo=node.js
+[NodeJS-url]: https://nodejs.org/
+[ExpressJS-badge]: https://img.shields.io/badge/ExpressJS-20232A?style=for-the-badge&logo=express.js
+[ExpressJS-url]: https://expressjs.com/
 [Docker-badge]: https://img.shields.io/badge/Docker-20232A?style=for-the-badge&logo=docker
 [Docker-url]: https://www.docker.com/

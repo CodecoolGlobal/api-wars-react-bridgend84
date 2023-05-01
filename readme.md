@@ -37,7 +37,7 @@ Download <a href="https://www.docker.com/">Docker</a>.
    ```sh
    docker-compose run backend node src/populate.js
    ```
-3. Run the application on Docker.
+3. Run the application on Docker
    ```sh
    docker compose up -d
    ```

@@ -5,7 +5,7 @@
 <h3 align="center">API WARS</h3>
 
 <p align="center">
-  Web application what shows data about the Star Wars universe (use <a href="https://swapi.dev/">swapi.dev</a>), stores visitor preferences (voting statistics) and handles user login.
+  Web application what shows data about the Star Wars universe (use <a href="https://swapi.dev/">swapi.dev</a>), stores visitor preferences (voting statistics) and handles user login.</p>
   <br />
 
 ### Built With

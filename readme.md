@@ -19,7 +19,7 @@
 
 ## Getting Started
 
-You can try the application int he easiest way with Docker.
+You can try the application the easiest way with Docker.
 
 ### Prerequisites
 

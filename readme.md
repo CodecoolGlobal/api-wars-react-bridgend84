@@ -12,9 +12,10 @@
 
 [![React][React.js]][React-url]
 [![Bootstrap][Bootstrap-badge]][Bootstrap-url]
-[![NodeJS][NodeJS-badge]][NodeJS-url]
 [![ExpressJS][ExpressJS-badge]][ExpressJS-url]
 [![MongoDB][MongoDB-badge]][MongoDB-url]
+[![NodeJS][NodeJS-badge]][NodeJS-url]
+[![NPM][NPM-badge]][NPM-url]
 [![Docker][Docker-badge]][Docker-url]
 
 ## Getting Started
@@ -60,5 +61,7 @@ Download <a href="https://www.docker.com/">Docker</a>.
 [NodeJS-url]: https://nodejs.org/
 [ExpressJS-badge]: https://img.shields.io/badge/ExpressJS-20232A?style=for-the-badge&logo=express
 [ExpressJS-url]: https://expressjs.com/
+[NPM-badge]: https://img.shields.io/badge/NPM-20232A?style=for-the-badge&logo=npm
+[NPM-url]: https://www.npmjs.com/
 [Docker-badge]: https://img.shields.io/badge/Docker-20232A?style=for-the-badge&logo=docker
 [Docker-url]: https://www.docker.com/
